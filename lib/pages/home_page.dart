@@ -68,6 +68,8 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         room = snapshot;
       });
+    }).catchError((e) {
+      print(e);
     });
   }
 
