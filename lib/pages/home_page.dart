@@ -6,6 +6,7 @@ import 'package:timer_chellenge/helper/helper_function.dart';
 import 'package:timer_chellenge/pages/join_page.dart';
 import 'package:timer_chellenge/pages/make_game_page.dart';
 import 'package:timer_chellenge/pages/pin_page.dart';
+import 'package:timer_chellenge/pages/profile_page.dart';
 import 'package:timer_chellenge/service/auth_service.dart';
 import 'package:timer_chellenge/service/database_service.dart';
 import 'package:timer_chellenge/widgets.dart/widgets.dart';
@@ -23,17 +24,16 @@ class _HomePageState extends State<HomePage> {
   String roomName = "";
   String email = '';
   String userName = '';
-  String room = '';
+  Stream? room;
   QuerySnapshot? searchSnapShot;
   bool hasRoomSearched = false;
   TextEditingController searchController = TextEditingController();
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    PinPage(),
-    Text('Search Page',
+  static List<Widget> _widgetOptions = <Widget>[
+    const PinPage(),
+    const Text('Search Page',
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    Text('Profile Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {

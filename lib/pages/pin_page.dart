@@ -1,6 +1,11 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:timer_chellenge/service/database_service.dart';
+
+import '../widgets.dart/widgets.dart';
+import 'make_game_page.dart';
 
 class PinPage extends StatefulWidget {
   const PinPage({super.key});
@@ -11,52 +16,71 @@ class PinPage extends StatefulWidget {
 
 class _PinPageState extends State<PinPage> {
   String pin = '';
+  QuerySnapshot? searchSnapShot;
+  bool _isLoading = false;
+  bool hasRoomSearched = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(pin),
-            const SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                numberButton('1'),
-                numberButton('2'),
-                numberButton('3'),
-              ],
+      body: _isLoading == true
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    '6桁のパスコードを打ってください',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Text(
+                    pin,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      numberButton('1'),
+                      numberButton('2'),
+                      numberButton('3'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      numberButton('4'),
+                      numberButton('5'),
+                      numberButton('6'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      numberButton('7'),
+                      numberButton('8'),
+                      numberButton('9'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      numberButton('戻る'),
+                      numberButton('0'),
+                      numberButton('Go'),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                numberButton('4'),
-                numberButton('5'),
-                numberButton('6'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                numberButton('7'),
-                numberButton('8'),
-                numberButton('9'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                numberButton('戻る'),
-                numberButton('0'),
-                numberButton('Go'),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -148,6 +172,48 @@ class _PinPageState extends State<PinPage> {
           }
         });
         break;
+      case 'Go':
+        initiateSearchMethod();
+        break;
+    }
+  }
+
+  initiateSearchMethod() async {
+    if (pin.length == 6) {
+      setState(() {
+        _isLoading = true;
+      });
+      await DataBaseService().searchByKey(pin).then((snapshot) {
+        setState(() {
+          searchSnapShot = snapshot;
+          _isLoading = false;
+          hasRoomSearched = true;
+        });
+        // if (searchSnapShot!.docs[0]['roomId'].notEmpty()) {
+        //   nextScreen(context, const MakeGamePage());
+        // } else {
+        //   print(searchSnapShot!.docs[0]['roomId']);
+        // }
+        if (searchSnapShot!.docs[0]['roomId'] == null) {
+          print('nullだよん');
+        } else {
+          print('ナルジャない');
+        }
+        print(searchSnapShot!.docs.length);
+        nextScreen(context, const MakeGamePage());
+      }).catchError((error) {
+        print(error);
+        _isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('ルームキーが存在しません、もう一度試してください'),
+          backgroundColor: Colors.red,
+        ));
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('ルームキーは6桁です。'),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 }
