@@ -1,6 +1,10 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io' as io;
 
 class DataBaseService {
   final String? uid;
@@ -22,6 +26,14 @@ class DataBaseService {
     });
   }
 
+  getProfilePic(String uid) async {
+    DocumentReference d = userCollection.doc(uid);
+    DocumentSnapshot documentSnapshot = await d.get();
+    print('getProfilePicの中');
+    print(documentSnapshot['profilePic']);
+    return documentSnapshot['profilePic'];
+  }
+
   //getting the user data
   Future gettingUserData(String email) async {
     QuerySnapshot querySnapshot =
@@ -39,8 +51,7 @@ class DataBaseService {
       'members': '',
       'roomId': '',
       'roomKey': rndnumber
-    }
-    );
+    });
     //update the members
     await roomDocumentReference.update({
       'members': FieldValue.arrayUnion(['${uid}_$userName']),
@@ -48,8 +59,7 @@ class DataBaseService {
     });
     DocumentReference userDocumentReference = userCollection.doc(id);
     return await userDocumentReference.update({
-      'rooms':
-          FieldValue.arrayUnion(['${roomDocumentReference.id}_$roomName']),
+      'rooms': FieldValue.arrayUnion(['${roomDocumentReference.id}_$roomName']),
     });
   }
 
@@ -60,5 +70,66 @@ class DataBaseService {
 
   searchByKey(String roomKey) {
     return roomCollection.where('roomKey', isEqualTo: roomKey).get();
+  }
+
+  Future<String?> selectIcon(BuildContext context) async {
+    const String selectIcon = "アイコンを選択";
+    const List<String> SELECT_ICON_OPTIONS = ["写真から選択", "写真を撮影"];
+    const int cameraRoll = 0;
+    const int camera = 1;
+    var selectType = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text(selectIcon),
+            children: SELECT_ICON_OPTIONS.asMap().entries.map((e) {
+              return SimpleDialogOption(
+                child: ListTile(
+                  title: Text(e.value),
+                ),
+                onPressed: () => Navigator.of(context).pop(e.key),
+              );
+            }).toList(),
+          );
+        });
+
+    final picker = ImagePicker();
+    var _img_src;
+
+    if (selectType == null) {
+      return null;
+    }
+    //カメラで撮影
+    else if (selectType == camera) {
+      _img_src = ImageSource.camera;
+    }
+    //ギャラリーから選択
+    else if (selectType == cameraRoll) {
+      _img_src = ImageSource.gallery;
+    }
+
+    final pickedFile = await picker.pickImage(source: _img_src);
+
+    if (pickedFile == null) {
+      return null;
+    } else {
+      return pickedFile.path;
+    }
+  }
+
+  Future<void> uploadFile(String sourcePath, String uploadFileName) async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child("images"); //保存するフォルダ
+
+    io.File file = io.File(sourcePath);
+    UploadTask task = ref.child(uploadFileName).putFile(file);
+
+    try {
+      var snapshot = await task;
+    } catch (FirebaseException) {
+      //エラー処理
+      print(FirebaseException);
+      print('アップロードできてない');
+    }
   }
 }
