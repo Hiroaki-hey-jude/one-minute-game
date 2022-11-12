@@ -29,11 +29,10 @@ class _HomePageState extends State<HomePage> {
   bool hasRoomSearched = false;
   TextEditingController searchController = TextEditingController();
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     const PinPage(),
-    const Text('Search Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    ProfilePage(),
+    const MakeGamePage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -177,7 +176,8 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: const Text('キャンセル'),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
               ),
               ElevatedButton(
                 onPressed: () async {

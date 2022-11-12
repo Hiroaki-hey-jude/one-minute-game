@@ -242,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () async {
                   await authService.signOut();
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
                       (route) => false);
                 },
                 child: const Text('ログアウト'),
@@ -308,6 +308,9 @@ class _ProfilePageState extends State<ProfilePage> {
         _isLoading = false;
       });
     } else {
+      setState(() {
+        _isLoading = false;
+      });
       return null;
     }
   }

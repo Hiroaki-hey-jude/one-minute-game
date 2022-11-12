@@ -63,6 +63,10 @@ class DataBaseService {
     });
   }
 
+  getRoomCollection() {
+    return roomCollection.get();
+  }
+
   //get user groups
   getUserRoom() async {
     return userCollection.doc(uid).snapshots();
@@ -70,6 +74,11 @@ class DataBaseService {
 
   searchByKey(String roomKey) {
     return roomCollection.where('roomKey', isEqualTo: roomKey).get();
+  }
+
+  searchByAdmin(String admin) {
+    print(admin + 'アドミン');
+    return roomCollection.where('admin', isEqualTo: admin).get();
   }
 
   Future<String?> selectIcon(BuildContext context) async {
