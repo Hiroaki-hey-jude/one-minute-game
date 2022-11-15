@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1075612384923",
+    "project_id": "oneminutegame-31557",
+    "storage_bucket": "oneminutegame-31557.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075612384923:android:1e323eff1e21cc2145d03e",
+        "android_client_info": {
+          "package_name": "com.example.timer_chellenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1075612384923-27qqbddoq6nsi7evga7pv3ileebtt3s7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdszGbPWfUWPfT7J2lesXD62MJjh4MFsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1075612384923-27qqbddoq6nsi7evga7pv3ileebtt3s7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1075612384923-a5nkpoithfn2tr4pnust0fnjq9qguc0q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.timerChellenge"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

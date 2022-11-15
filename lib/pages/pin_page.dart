@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:timer_chellenge/helper/helper_function.dart';
 import 'package:timer_chellenge/service/database_service.dart';
 
 import '../widgets.dart/widgets.dart';
@@ -16,9 +18,26 @@ class PinPage extends StatefulWidget {
 
 class _PinPageState extends State<PinPage> {
   String pin = '';
+  String userName = '';
   QuerySnapshot? searchSnapShot;
   bool _isLoading = false;
   bool hasRoomSearched = false;
+
+  gettingUserData() async {
+    await HelperFunction.getUserNameFromSF().then((value) {
+      setState(() {
+        userName = value!;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    gettingUserData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,17 +208,16 @@ class _PinPageState extends State<PinPage> {
           _isLoading = false;
           hasRoomSearched = true;
         });
-        // if (searchSnapShot!.docs[0]['roomId'].notEmpty()) {
-        //   nextScreen(context, const MakeGamePage());
-        // } else {
-        //   print(searchSnapShot!.docs[0]['roomId']);
-        // }
         if (searchSnapShot!.docs[0]['roomId'] == null) {
           print('nullだよん');
         } else {
           print('ナルジャない');
         }
-        print(searchSnapShot!.docs.length);
+        print(searchSnapShot!.docs[0]['roomId'] + 'roomId');
+        DataBaseService().addMemberToRoomInFirestore(
+            FirebaseAuth.instance.currentUser!.uid,
+            userName,
+            searchSnapShot!.docs[0]['roomId']);
         nextScreen(context, const MakeGamePage());
       }).catchError((error) {
         print(error);

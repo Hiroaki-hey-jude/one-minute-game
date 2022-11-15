@@ -29,8 +29,6 @@ class DataBaseService {
   getProfilePic(String uid) async {
     DocumentReference d = userCollection.doc(uid);
     DocumentSnapshot documentSnapshot = await d.get();
-    print('getProfilePicの中');
-    print(documentSnapshot['profilePic']);
     return documentSnapshot['profilePic'];
   }
 
@@ -63,8 +61,20 @@ class DataBaseService {
     });
   }
 
+  Future addMemberToRoomInFirestore(
+      String id, String userName, String roomId) async {
+    DocumentReference roomDocumentReference = roomCollection.doc(roomId);
+    return await roomDocumentReference.update({
+      'members': FieldValue.arrayUnion(['${id}_$userName']),
+    });
+  }
+
   getRoomCollection() {
     return roomCollection.get();
+  }
+
+  getRoomMembers(roomId) async {
+    return roomCollection.doc(roomId).snapshots();
   }
 
   //get user groups
@@ -74,6 +84,13 @@ class DataBaseService {
 
   searchByKey(String roomKey) {
     return roomCollection.where('roomKey', isEqualTo: roomKey).get();
+  }
+
+  searchByRoomId(String roomId) async {
+    print(roomId + ' room id だ');
+    DocumentSnapshot docSnapshot = await userCollection.doc(roomId).get();
+    return docSnapshot.get('profilePic');
+    //return docSnapshot.data();
   }
 
   searchByAdmin(String admin) {

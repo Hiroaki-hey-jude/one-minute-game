@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.rocket_launch),
-            label: 'ゲーム作成',
+            label: 'ゲーム',
             tooltip: "This is a Business Page",
             backgroundColor: Colors.green,
           ),

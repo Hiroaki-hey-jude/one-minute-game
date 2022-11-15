@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_chellenge/helper/helper_function.dart';
+import 'package:timer_chellenge/pages/admin_game_page.dart';
 
 import '../service/database_service.dart';
 import '../widgets.dart/widgets.dart';
@@ -50,7 +51,6 @@ class _MakeGamePageState extends State<MakeGamePage> {
       setState(() {
         searchSnapShot = snapshot;
         print('ナナ垢');
-        print(searchSnapShot!.docs[1]['roomKey']);
       });
     });
     setState(() {
@@ -83,7 +83,7 @@ class _MakeGamePageState extends State<MakeGamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.cyan,
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.6),
         elevation: 0,
         onPressed: () {
           popUpDialog(context);
@@ -119,15 +119,18 @@ class _MakeGamePageState extends State<MakeGamePage> {
                     .snapshots(),
                 builder: (context, AsyncSnapshot snapshot) {
                   return snapshot.hasData
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.docs.length,
-                          itemBuilder: ((context, index) {
-                            return groupTile(
-                              getName(admin),
-                              snapshot.data!.docs[index]['roomName'],
-                            );
-                          }),
+                      ? SingleChildScrollView(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: ((context, index) {
+                              return groupTile(
+                                  getName(snapshot.data!.docs[index]['admin']),
+                                  snapshot.data!.docs[index]['roomName'],
+                                  snapshot.data!.docs[index]['roomKey'],
+                                  snapshot.data!.docs[index]['roomId']);
+                            }),
+                          ),
                         )
                       : Container();
                 }),
@@ -137,9 +140,27 @@ class _MakeGamePageState extends State<MakeGamePage> {
     );
   }
 
-  Widget groupTile(String admin, String roomName) {
+  Widget groupTile(
+      String admin, String roomName, String roomKey, String roomId) {
     return ListTile(
-        shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black12)),
+        onTap: () {
+          nextScreen(
+              context,
+              AdminGamePage(
+                  roomId: roomId,
+                  admin: admin,
+                  roomName: roomName,
+                  roomKey: roomKey));
+        },
+        shape: const RoundedRectangleBorder(side: BorderSide(color: Colors.black12)),
+        leading: CircleAvatar(
+          radius: 30,
+          backgroundColor: Theme.of(context).primaryColor,
+          child: Text(
+            roomName.substring(0, 1).toUpperCase(),
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
         title:
             Text(roomName, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(admin));

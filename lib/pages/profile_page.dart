@@ -88,12 +88,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   .snapshots(),
               builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
-                  return new Center(child: new CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 String originalImgURL = snapshot.data!.get('profilePic')
                             as String !=
                         ''
                     ? snapshot.data!.get('profilePic') as String
                     : 'https://msp.c.yimg.jp/images/v2/FUTi93tXq405grZVGgDqGx5cm8knTLo61O84kVTxOan841a30-aIJSoqkmlQNsP4-Qv0KVqX9M9vYFUiwJk7Td3V7vPM0KOdWqrUituYvtnSar9x6L84qPLmIBtWCypFJz0KXlr7qn7fBK3IAzXNoKqa8nXN1Pz9ov4LKOTDRDV8wVWo1nQMCGO9E4o6K36McUAylQDeTQRNF9Op3JfY2iTFAun4IWDGV3qwbY8bHxZl4xSjUUv4fCzYvGjh2ca9bpeFmXd2K-uN80LrsmWEALH9sYrv73X1ZPxpgNLPBEe_7WG2Ffw6G1V4ZRj10gSJAhhlIWmL3Dppp79xAsruIw==/800px-Solid_blue.svg.png?errorImage=false';
+                print(originalImgURL + ' オリジナルURLだ');
                 return Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
@@ -242,7 +243,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 onPressed: () async {
                   await authService.signOut();
                   Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
                       (route) => false);
                 },
                 child: const Text('ログアウト'),
