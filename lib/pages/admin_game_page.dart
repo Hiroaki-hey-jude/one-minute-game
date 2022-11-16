@@ -28,6 +28,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
   Stream? members;
   String imageProfile = '';
   String urlOfProfilePic = '';
+  List<String> urls = [];
 
   @override
   void initState() {
@@ -126,12 +127,12 @@ class _AdminGamePageState extends State<AdminGamePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             const Text(
               '参加者',
               style: TextStyle(fontSize: 20),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             StreamBuilder(
               stream: members,
               builder: (context, AsyncSnapshot snapshot) {
@@ -143,47 +144,16 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         shrinkWrap: true,
                         itemCount: snapshot.data['members'].length,
                         itemBuilder: (context, index) {
-                          print(getName(snapshot.data['members'][index]) +
-                              ' nameだ');
-                          print(index);
-                          print('streambiulder終わり');
-                          DataBaseService()
-                              .searchByRoomId(
-                                  getId(snapshot.data['members'][index]))
-                              .then((val) {
-                            setState(() {
-                              print(index);
-                              print('setstateの中');
-                              urlOfProfilePic = val;
-                            });
-                          }).catchError((e) {
-                            urlOfProfilePic =
-                                'https://msp.c.yimg.jp/images/v2/FUTi93tXq405grZVGgDqGx5cm8knTLo61O84kVTxOan841a30-aIJSoqkmlQNsP4-Qv0KVqX9M9vYFUiwJk7Td3V7vPM0KOdWqrUituYvtnSar9x6L84qPLmIBtWCypFJz0KXlr7qn7fBK3IAzXNoKqa8nXN1Pz9ov4LKOTDRDV8wVWo1nQMCGO9E4o6K36McUAylQDeTQRNF9Op3JfY2iTFAun4IWDGV3qwbY8bHxZl4xSjUUv4fCzYvGjh2ca9bpeFmXd2K-uN80LrsmWEALH9sYrv73X1ZPxpgNLPBEe_7WG2Ffw6G1V4ZRj10gSJAhhlIWmL3Dppp79xAsruIw==/800px-Solid_blue.svg.png?errorImage=false';
-                            print(e);
-                          });
-                          return ListTile(
-                            tileColor: const Color(0xFFCEE5FF),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                            ),
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: urlOfProfilePic == ''
-                                  ? null
-                                  : NetworkImage(urlOfProfilePic),
-                            ),
-                            title: Text(
-                              getName(snapshot.data['members'][index]),
-                            ),
-                            trailing: Text(index.toString()),
+                          return participantTiles(
+                            getId(snapshot.data['members'][index]),
+                            snapshot.data['members'][index],
+                            index,
                           );
                         },
                       ),
                     );
                   } else {
-                    return const Text("NO MEMBERSss");
+                    return const Text("友達にルームキーを教えよう！");
                   }
                 } else {
                   return const Text("NO MEMBERS");
@@ -193,6 +163,52 @@ class _AdminGamePageState extends State<AdminGamePage> {
           ],
         ),
       ),
+    );
+  }
+
+  participantTiles(String roomId, String userName, int index) {
+    print('hihihi->3');
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ListTile(
+        tileColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        leading: profilePicturesWidget(userName),
+        title: Text(
+          getName(userName),
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+
+  Widget profilePicturesWidget(String userName) {
+    return SizedBox(
+      height: 50,
+      width: 50,
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(getId(userName))
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(child: CircularProgressIndicator());
+            String originalImgURL = snapshot.data!.get('profilePic')
+                        as String !=
+                    ''
+                ? snapshot.data!.get('profilePic') as String
+                : 'https://msp.c.yimg.jp/images/v2/FUTi93tXq405grZVGgDqGx5cm8knTLo61O84kVTxOan841a30-aIJSoqkmlQNsP4-Qv0KVqX9M9vYFUiwJk7Td3V7vPM0KOdWqrUituYvtnSar9x6L84qPLmIBtWCypFJz0KXlr7qn7fBK3IAzXNoKqa8nXN1Pz9ov4LKOTDRDV8wVWo1nQMCGO9E4o6K36McUAylQDeTQRNF9Op3JfY2iTFAun4IWDGV3qwbY8bHxZl4xSjUUv4fCzYvGjh2ca9bpeFmXd2K-uN80LrsmWEALH9sYrv73X1ZPxpgNLPBEe_7WG2Ffw6G1V4ZRj10gSJAhhlIWmL3Dppp79xAsruIw==/800px-Solid_blue.svg.png?errorImage=false';
+            print(originalImgURL);
+            return CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(originalImgURL),
+            );
+          }),
     );
   }
 }

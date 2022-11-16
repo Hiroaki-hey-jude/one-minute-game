@@ -52,7 +52,7 @@ class DataBaseService {
     });
     //update the members
     await roomDocumentReference.update({
-      'members': FieldValue.arrayUnion(['${uid}_$userName']),
+      //'members': FieldValue.arrayUnion(['${uid}_$userName']),
       'roomId': roomDocumentReference.id
     });
     DocumentReference userDocumentReference = userCollection.doc(id);
@@ -87,9 +87,8 @@ class DataBaseService {
   }
 
   searchByRoomId(String roomId) async {
-    print(roomId + ' room id だ');
     DocumentSnapshot docSnapshot = await userCollection.doc(roomId).get();
-    return docSnapshot.get('profilePic');
+    return docSnapshot.get('profilePic') as String;
     //return docSnapshot.data();
   }
 

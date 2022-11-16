@@ -125,10 +125,11 @@ class _MakeGamePageState extends State<MakeGamePage> {
                             itemCount: snapshot.data.docs.length,
                             itemBuilder: ((context, index) {
                               return groupTile(
-                                  getName(snapshot.data!.docs[index]['admin']),
-                                  snapshot.data!.docs[index]['roomName'],
-                                  snapshot.data!.docs[index]['roomKey'],
-                                  snapshot.data!.docs[index]['roomId']);
+                                getName(snapshot.data!.docs[index]['admin']),
+                                snapshot.data!.docs[index]['roomName'],
+                                snapshot.data!.docs[index]['roomKey'],
+                                snapshot.data!.docs[index]['roomId'],
+                              );
                             }),
                           ),
                         )
@@ -152,7 +153,8 @@ class _MakeGamePageState extends State<MakeGamePage> {
                   roomName: roomName,
                   roomKey: roomKey));
         },
-        shape: const RoundedRectangleBorder(side: BorderSide(color: Colors.black12)),
+        shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black12)),
         leading: CircleAvatar(
           radius: 30,
           backgroundColor: Theme.of(context).primaryColor,
