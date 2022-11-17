@@ -180,7 +180,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         setState(() {
                           _isloading = true;
                         });
-                        nextScreenReplacement(context, const PlayingGamePage());
+                        nextScreenReplacement(context, PlayingGamePage(isAdmin: isAdmin));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -254,7 +254,8 @@ class _AdminGamePageState extends State<AdminGamePage> {
                     stream: members,
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.data['hasGameStarted'] == true) {
-                        nextScreenReplacement(context, const PlayingGamePage());
+                        nextScreenReplacement(
+                            context, PlayingGamePage(isAdmin: isAdmin));
                       }
                       if (snapshot.hasData) {
                         if (snapshot.data['members'].length != 0) {
