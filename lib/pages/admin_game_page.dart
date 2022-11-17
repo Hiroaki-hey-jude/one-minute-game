@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:timer_chellenge/pages/playing_game_page.dart';
 import 'package:timer_chellenge/pages/room_info_page.dart';
 import 'package:timer_chellenge/service/database_service.dart';
 
@@ -10,15 +10,16 @@ import '../widgets.dart/widgets.dart';
 
 class AdminGamePage extends StatefulWidget {
   final String roomId;
-  final String admin;
+  final String userName;
   final String roomName;
   final String roomKey;
-  const AdminGamePage(
-      {super.key,
-      required this.roomId,
-      required this.admin,
-      required this.roomName,
-      required this.roomKey});
+  const AdminGamePage({
+    super.key,
+    required this.roomId,
+    required this.userName,
+    required this.roomName,
+    required this.roomKey,
+  });
 
   @override
   State<AdminGamePage> createState() => _AdminGamePageState();
@@ -29,12 +30,22 @@ class _AdminGamePageState extends State<AdminGamePage> {
   String imageProfile = '';
   String urlOfProfilePic = '';
   List<String> urls = [];
+  bool? isAdmin;
+  bool _isloading = false;
+
+  String getName(String r) {
+    return r.substring(r.indexOf('_') + 1);
+  }
+
+  String getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getMembers();
+    adminOrNot();
   }
 
   getMembers() async {
@@ -47,16 +58,62 @@ class _AdminGamePageState extends State<AdminGamePage> {
     });
   }
 
-  String getName(String r) {
-    return r.substring(r.indexOf('_') + 1);
-  }
-
-  String getId(String res) {
-    return res.substring(0, res.indexOf("_"));
+  adminOrNot() {
+    print(widget.roomId);
+    String adminFirestore = '';
+    DataBaseService().getAdminByRoomId(widget.roomId).then((val) {
+      adminFirestore = val;
+      print(adminFirestore + '------>');
+      print(widget.userName + '----->widget.userName');
+      if (adminFirestore == widget.userName) {
+        print('キタキタ');
+        setState(() {
+          isAdmin = true;
+        });
+        print('adminだああああああああ');
+      } else {
+        setState(() {
+          isAdmin = false;
+        });
+        if (isAdmin == null) {
+          print('nulllllllll');
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isAdmin == null) {
+      backgroundColor:
+      Colors.grey[300];
+      return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Theme.of(context).primaryColor,
+          centerTitle: true,
+          title: Text(widget.roomName),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  nextScreen(
+                      context,
+                      RoomInfoPage(
+                        roomId: widget.roomId,
+                        roomName: widget.roomName,
+                        admin: widget.userName,
+                      ));
+                },
+                icon: const Icon(Icons.info))
+          ],
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -72,97 +129,160 @@ class _AdminGamePageState extends State<AdminGamePage> {
                     RoomInfoPage(
                       roomId: widget.roomId,
                       roomName: widget.roomName,
-                      admin: widget.admin,
+                      admin: widget.userName,
                     ));
               },
               icon: const Icon(Icons.info))
         ],
       ),
-      body: Center(
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
-          //crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-              //color: Colors.white,
-              child: GestureDetector(
-                onTap: () async {
-                  await Clipboard.setData(
-                    ClipboardData(text: widget.roomKey),
-                  );
-                },
-                child: Text(
-                  widget.roomKey,
-                  style: const TextStyle(
-                    fontSize: 50,
-                    letterSpacing: 0.15,
+      body: isAdmin == true
+          ? Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 40),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                    //color: Colors.white,
+                    child: GestureDetector(
+                      onTap: () async {
+                        await Clipboard.setData(
+                          ClipboardData(text: widget.roomKey),
+                        );
+                      },
+                      child: Text(
+                        widget.roomKey,
+                        style: const TextStyle(
+                          fontSize: 50,
+                          letterSpacing: 0.15,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).primaryColor.withOpacity(0.4),
-                  minimumSize: const Size(100, 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0)),
-                ),
-                child: const FittedBox(
-                  child: Text(
-                    'START',
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isloading = true;
+                        });
+                        await FirebaseFirestore.instance
+                            .collection('rooms')
+                            .doc(widget.roomId)
+                            .update({
+                          'hasGameStarted': true,
+                        });
+                        setState(() {
+                          _isloading = true;
+                        });
+                        nextScreenReplacement(context, const PlayingGamePage());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).primaryColor.withOpacity(0.4),
+                        minimumSize: const Size(100, 50),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32.0)),
+                      ),
+                      child: const FittedBox(
+                        child: Text(
+                          '参加者を締め切る',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        fit: BoxFit.fitHeight,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  const Text(
+                    '参加者',
                     style: TextStyle(fontSize: 20),
                   ),
-                  fit: BoxFit.fitHeight,
-                ),
+                  const SizedBox(height: 10),
+                  StreamBuilder(
+                    stream: members,
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data['members'].length != 0) {
+                          return SingleChildScrollView(
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: snapshot.data['members'].length,
+                              itemBuilder: (context, index) {
+                                return participantTiles(
+                                  getId(snapshot.data['members'][index]),
+                                  snapshot.data['members'][index],
+                                  index,
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return const Text("友達にルームキーを教えよう！");
+                        }
+                      } else {
+                        return const Text("NO MEMBERS");
+                      }
+                    },
+                  )
+                ],
+              ),
+            )
+          : Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 15),
+                  const Text(
+                    'ゲームが始まるまで少々お待ちください',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  const Text(
+                    '参加者',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 15),
+                  StreamBuilder(
+                    stream: members,
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.data['hasGameStarted'] == true) {
+                        nextScreenReplacement(context, const PlayingGamePage());
+                      }
+                      if (snapshot.hasData) {
+                        if (snapshot.data['members'].length != 0) {
+                          return SingleChildScrollView(
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: snapshot.data['members'].length,
+                              itemBuilder: (context, index) {
+                                return participantTiles(
+                                  getId(snapshot.data['members'][index]),
+                                  snapshot.data['members'][index],
+                                  index,
+                                );
+                              },
+                            ),
+                          );
+                        } else {
+                          return const Text("友達にルームキーを教えよう！");
+                        }
+                      } else {
+                        return const Text("NO MEMBERS");
+                      }
+                    },
+                  )
+                ],
               ),
             ),
-            const SizedBox(height: 25),
-            const Text(
-              '参加者',
-              style: TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 10),
-            StreamBuilder(
-              stream: members,
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data['members'].length != 0) {
-                    return SingleChildScrollView(
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: snapshot.data['members'].length,
-                        itemBuilder: (context, index) {
-                          return participantTiles(
-                            getId(snapshot.data['members'][index]),
-                            snapshot.data['members'][index],
-                            index,
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return const Text("友達にルームキーを教えよう！");
-                  }
-                } else {
-                  return const Text("NO MEMBERS");
-                }
-              },
-            )
-          ],
-        ),
-      ),
     );
   }
 

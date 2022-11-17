@@ -4,6 +4,7 @@ import 'package:timer_chellenge/helper/helper_function.dart';
 import 'package:timer_chellenge/pages/auth/login_page.dart';
 import 'package:timer_chellenge/pages/auth/register_page.dart';
 import 'package:timer_chellenge/pages/home_page.dart';
+import 'package:timer_chellenge/service/auth_service.dart';
 import 'package:timer_chellenge/shared/constant.dart';
 
 void main() async {
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     getUserLoggedInStatus();
   }
+
   getUserLoggedInStatus() async {
     await HelperFunction.getUserLoggedInStatus().then((value) {
       if (value != null) {
@@ -36,6 +38,7 @@ class _MyAppState extends State<MyApp> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

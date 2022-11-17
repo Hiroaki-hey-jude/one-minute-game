@@ -125,7 +125,7 @@ class _MakeGamePageState extends State<MakeGamePage> {
                             itemCount: snapshot.data.docs.length,
                             itemBuilder: ((context, index) {
                               return groupTile(
-                                getName(snapshot.data!.docs[index]['admin']),
+                                snapshot.data!.docs[index]['admin'],
                                 snapshot.data!.docs[index]['roomName'],
                                 snapshot.data!.docs[index]['roomKey'],
                                 snapshot.data!.docs[index]['roomId'],
@@ -143,13 +143,15 @@ class _MakeGamePageState extends State<MakeGamePage> {
 
   Widget groupTile(
       String admin, String roomName, String roomKey, String roomId) {
-    return ListTile(
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: ListTile(
         onTap: () {
           nextScreen(
               context,
               AdminGamePage(
                   roomId: roomId,
-                  admin: admin,
+                  userName: admin,
                   roomName: roomName,
                   roomKey: roomKey));
         },
@@ -165,7 +167,8 @@ class _MakeGamePageState extends State<MakeGamePage> {
         ),
         title:
             Text(roomName, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(admin));
+      ),
+    );
   }
 
   popUpDialog(context) {

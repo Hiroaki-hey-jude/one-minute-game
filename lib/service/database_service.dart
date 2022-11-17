@@ -48,7 +48,8 @@ class DataBaseService {
       'admin': '${id}_$userName',
       'members': '',
       'roomId': '',
-      'roomKey': rndnumber
+      'roomKey': rndnumber,
+      'hasGameStarted': false
     });
     //update the members
     await roomDocumentReference.update({
@@ -89,7 +90,12 @@ class DataBaseService {
   searchByRoomId(String roomId) async {
     DocumentSnapshot docSnapshot = await userCollection.doc(roomId).get();
     return docSnapshot.get('profilePic') as String;
-    //return docSnapshot.data();
+  }
+
+  getAdminByRoomId(String roomId) async {
+    DocumentSnapshot docSnapshot = await roomCollection.doc(roomId).get();
+    print(docSnapshot.get('admin') + '->adminです');
+    return docSnapshot.get('admin');
   }
 
   searchByAdmin(String admin) {

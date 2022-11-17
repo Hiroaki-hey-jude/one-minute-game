@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_chellenge/helper/helper_function.dart';
+import 'package:timer_chellenge/pages/admin_game_page.dart';
 import 'package:timer_chellenge/service/database_service.dart';
 
 import '../widgets.dart/widgets.dart';
@@ -215,10 +216,18 @@ class _PinPageState extends State<PinPage> {
         }
         print(searchSnapShot!.docs[0]['roomId'] + 'roomId');
         DataBaseService().addMemberToRoomInFirestore(
-            FirebaseAuth.instance.currentUser!.uid,
-            userName,
-            searchSnapShot!.docs[0]['roomId']);
-        nextScreen(context, const MakeGamePage());
+          FirebaseAuth.instance.currentUser!.uid,
+          userName,
+          searchSnapShot!.docs[0]['roomId'],
+        );
+        nextScreen(
+            context,
+            AdminGamePage(
+              roomId: searchSnapShot!.docs[0]['roomId'],
+              userName: userName,
+              roomName: searchSnapShot!.docs[0]['roomName'],
+              roomKey: pin,
+            ));
       }).catchError((error) {
         print(error);
         _isLoading = false;
