@@ -49,7 +49,8 @@ class DataBaseService {
       'members': '',
       'roomId': '',
       'roomKey': rndnumber,
-      'hasGameStarted': false
+      'hasGameStarted': false,
+      'hasTimerStarted': false
     });
     //update the members
     await roomDocumentReference.update({

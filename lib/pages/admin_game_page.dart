@@ -180,7 +180,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         setState(() {
                           _isloading = true;
                         });
-                        nextScreenReplacement(context, PlayingGamePage(isAdmin: isAdmin));
+                        nextScreenReplacement(context, PlayingGamePage(isAdmin: isAdmin, roomId: widget.roomId));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -253,11 +253,15 @@ class _AdminGamePageState extends State<AdminGamePage> {
                   StreamBuilder(
                     stream: members,
                     builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.data['hasGameStarted'] == true) {
-                        nextScreenReplacement(
-                            context, PlayingGamePage(isAdmin: isAdmin));
-                      }
                       if (snapshot.hasData) {
+                        if (snapshot.data['hasGameStarted'] == true) {
+                          Future.delayed(Duration(seconds: 1), (() {
+                            nextScreenReplacement(
+                              context,
+                              PlayingGamePage(
+                                  isAdmin: isAdmin, roomId: widget.roomId));
+                          }));
+                        }
                         if (snapshot.data['members'].length != 0) {
                           return SingleChildScrollView(
                             child: ListView.builder(
