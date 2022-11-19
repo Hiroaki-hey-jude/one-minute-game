@@ -224,7 +224,7 @@ class _PinPageState extends State<PinPage> {
             context,
             AdminGamePage(
               roomId: searchSnapShot!.docs[0]['roomId'],
-              userName: userName,
+              userName: '${FirebaseAuth.instance.currentUser!.uid}_$userName',
               roomName: searchSnapShot!.docs[0]['roomName'],
               roomKey: pin,
             ));

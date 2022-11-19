@@ -50,7 +50,8 @@ class DataBaseService {
       'roomId': '',
       'roomKey': rndnumber,
       'hasGameStarted': false,
-      'hasTimerStarted': false
+      'hasTimerStarted': false,
+      'hasTimerStopped': false
     });
     //update the members
     await roomDocumentReference.update({
@@ -163,5 +164,14 @@ class DataBaseService {
       print(FirebaseException);
       print('アップロードできてない');
     }
+  }
+
+  //send message
+  pressStopButtonAndSaveInFIrestore(String roomId, Map<String, dynamic> timeParticipant) async {
+    roomCollection.doc(roomId).collection('record').add(timeParticipant);
+    // roomCollection.doc(roomId).update({
+    //   'timer': timeParticipant['time'],
+    //   'userNamePressed': timeParticipant['userName'],
+    // });
   }
 }

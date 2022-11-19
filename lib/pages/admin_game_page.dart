@@ -180,7 +180,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         setState(() {
                           _isloading = true;
                         });
-                        nextScreenReplacement(context, PlayingGamePage(isAdmin: isAdmin, roomId: widget.roomId));
+                        nextScreenReplacement(context, PlayingGamePage(isAdmin: isAdmin, roomId: widget.roomId, userName: widget.userName,));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -234,7 +234,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                 ],
               ),
             )
-          : Center(
+          : Center( //adminじゃない
               child: Column(
                 children: [
                   const SizedBox(height: 15),
@@ -259,7 +259,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                             nextScreenReplacement(
                               context,
                               PlayingGamePage(
-                                  isAdmin: isAdmin, roomId: widget.roomId));
+                                  isAdmin: isAdmin, roomId: widget.roomId, userName: widget.userName));
                           }));
                         }
                         if (snapshot.data['members'].length != 0) {
@@ -311,29 +311,29 @@ class _AdminGamePageState extends State<AdminGamePage> {
     );
   }
 
-  Widget profilePicturesWidget(String userName) {
-    return SizedBox(
-      height: 50,
-      width: 50,
-      child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(getId(userName))
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: CircularProgressIndicator());
-            String originalImgURL = snapshot.data!.get('profilePic')
-                        as String !=
-                    ''
-                ? snapshot.data!.get('profilePic') as String
-                : 'https://msp.c.yimg.jp/images/v2/FUTi93tXq405grZVGgDqGx5cm8knTLo61O84kVTxOan841a30-aIJSoqkmlQNsP4-Qv0KVqX9M9vYFUiwJk7Td3V7vPM0KOdWqrUituYvtnSar9x6L84qPLmIBtWCypFJz0KXlr7qn7fBK3IAzXNoKqa8nXN1Pz9ov4LKOTDRDV8wVWo1nQMCGO9E4o6K36McUAylQDeTQRNF9Op3JfY2iTFAun4IWDGV3qwbY8bHxZl4xSjUUv4fCzYvGjh2ca9bpeFmXd2K-uN80LrsmWEALH9sYrv73X1ZPxpgNLPBEe_7WG2Ffw6G1V4ZRj10gSJAhhlIWmL3Dppp79xAsruIw==/800px-Solid_blue.svg.png?errorImage=false';
-            print(originalImgURL);
-            return CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(originalImgURL),
-            );
-          }),
-    );
-  }
+  // Widget profilePicturesWidget(String userName) {
+  //   return SizedBox(
+  //     height: 50,
+  //     width: 50,
+  //     child: StreamBuilder(
+  //         stream: FirebaseFirestore.instance
+  //             .collection('users')
+  //             .doc(getId(userName))
+  //             .snapshots(),
+  //         builder: (context, snapshot) {
+  //           if (snapshot.connectionState == ConnectionState.waiting)
+  //             return Center(child: CircularProgressIndicator());
+  //           String originalImgURL = snapshot.data!.get('profilePic')
+  //                       as String !=
+  //                   ''
+  //               ? snapshot.data!.get('profilePic') as String
+  //               : 'https://msp.c.yimg.jp/images/v2/FUTi93tXq405grZVGgDqGx5cm8knTLo61O84kVTxOan841a30-aIJSoqkmlQNsP4-Qv0KVqX9M9vYFUiwJk7Td3V7vPM0KOdWqrUituYvtnSar9x6L84qPLmIBtWCypFJz0KXlr7qn7fBK3IAzXNoKqa8nXN1Pz9ov4LKOTDRDV8wVWo1nQMCGO9E4o6K36McUAylQDeTQRNF9Op3JfY2iTFAun4IWDGV3qwbY8bHxZl4xSjUUv4fCzYvGjh2ca9bpeFmXd2K-uN80LrsmWEALH9sYrv73X1ZPxpgNLPBEe_7WG2Ffw6G1V4ZRj10gSJAhhlIWmL3Dppp79xAsruIw==/800px-Solid_blue.svg.png?errorImage=false';
+  //           print(originalImgURL);
+  //           return CircleAvatar(
+  //             radius: 30,
+  //             backgroundImage: NetworkImage(originalImgURL),
+  //           );
+  //         }),
+  //   );
+  // }
 }
