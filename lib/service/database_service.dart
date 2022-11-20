@@ -27,8 +27,10 @@ class DataBaseService {
   }
 
   getProfilePic(String uid) async {
+    print('kokooo coming???');
     DocumentReference d = userCollection.doc(uid);
     DocumentSnapshot documentSnapshot = await d.get();
+    print(documentSnapshot['profilePic'] + '---->profilePic');
     return documentSnapshot['profilePic'];
   }
 
@@ -103,6 +105,14 @@ class DataBaseService {
   searchByAdmin(String admin) {
     print(admin + 'アドミン');
     return roomCollection.where('admin', isEqualTo: admin).get();
+  }
+
+  searchByTime(double time, String roomId) {
+    return roomCollection
+        .doc(roomId)
+        .collection('record')
+        .where('time', isEqualTo: time)
+        .get();
   }
 
   Future<String?> selectIcon(BuildContext context) async {
@@ -198,5 +208,25 @@ class DataBaseService {
     // print(records!['time']);
     // //print(allData);
     // // return roomCollection.doc(roomId).collection('record').get();
+  }
+
+  deleteRecordData(String roomId) async {
+    var collection = roomCollection.doc(roomId).collection('record');
+    var snapshot = await collection.get();
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
+
+  updateDataOfRooms(String roomId) async {
+    await FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .update({
+      'hasGameStarted': false,
+      'hasTimerStarted': false,
+      'hasTimerStopped': false,
+      'members': FieldValue.delete()
+    });
   }
 }
