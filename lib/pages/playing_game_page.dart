@@ -48,6 +48,10 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
     return r.substring(r.indexOf('_') + 1);
   }
 
+  void setStateIfMounted(f) {
+    if (mounted) setState(f);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +68,7 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
                       children: [
                         countTimer(),
                         hasTimerStarted == false ? startButton() : stopButton(),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         participantsTiles(),
                       ],
                     ),
@@ -76,41 +80,26 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                child: hasParticipantsStopButtonPressed == false
-                    ? Center(
-                        child: Column(
-                          children: [
-                            patcipantsTimer(),
-                            const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 10),
-                              child: hasTimerStarted == true
-                                  ? const Text(
-                                      'あなたがジャスト１分だと思った時STOPを押してください',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    )
-                                  : const Text(
-                                      'ルームマスターがタイマーを\nSTARTするまでお待ちください',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                            )
-                          ],
-                        ),
+                child: Center(
+                  child: Column(
+                    children: [
+                      patcipantsTimer(),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 10),
+                        child: hasParticipantsStopButtonPressed != true
+                            ? const Text(
+                                'あなたがジャスト１分だと思った時STOPを押してください',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              )
+                            : const Text('他の参加者を待っています'),
                       )
-                    : const Center(
-                        child: Text(
-                          '集計中です、少々お待ちください',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
     );
@@ -169,25 +158,40 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data!['hasTimerStopped'] == true) {
-            Future.delayed(
-              Duration(seconds: 1),
-              (() {
-                nextScreenReplacement(context, const EndPage());
-              }),
-            );
-          }
           if (snapshot.data!.get('hasTimerStarted') == true) {
             print('kokokiteru????');
-            _stopWatchTimer.onStartTimer();
-            Future.delayed(const Duration(seconds: 5), () {
-              //５秒経ったら秒数消す
-              setState(() {
-                hasFiveSecondsPassed = true;
+            if (snapshot.data!['hasTimerStopped'] == true) {
+              Future.delayed(
+                const Duration(seconds: 2),
+                (() {
+                  nextScreenReplacement(
+                      context,
+                      EndPage(
+                        isAdmin: widget.isAdmin,
+                        roomId: widget.roomId,
+                      ));
+                }),
+              );
+            } else {
+              _stopWatchTimer.onStartTimer(); //start timer
+              Future.delayed(const Duration(seconds: 5), () {
+                //５秒経ったら秒数消す
+                if (mounted) {
+                  setState(() {
+                    hasFiveSecondsPassed = true;
+                    hasTimerStarted = true;
+                  });
+                }
+                // setStateIfMounted(hasFiveSecondsPassed = true);
+                // setStateIfMounted(hasTimerStarted = true);
               });
-            });
+            }
           }
-          return countTimerForParticipants();
+          return hasParticipantsStopButtonPressed != true
+              ? countTimerForParticipants()
+              : const Center(
+                  child: Text('少々お待ちください'),
+                );
         } else {
           return const Center(
             child: Text('少々お待ちください'),
@@ -259,8 +263,8 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
                     child: hasFiveSecondsPassed == true
-                        ? Center(
-                            child: const Text('集中。。。'),
+                        ? const Center(
+                            child: Text('集中。。。'),
                           )
                         : Text(
                             displayTime,
@@ -302,6 +306,7 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
           setState(() {
             hasTimerStarted = true;
           });
+          //setStateIfMounted(hasTimerStarted = true);
           _stopWatchTimer.onStartTimer();
         },
         child: const Text(
@@ -324,14 +329,24 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
           ),
         ),
         onPressed: () {
-          if(hasTimerStarted == true) {
+          if (hasTimerStarted == true) {
             FirebaseFirestore.instance
                 .collection('rooms')
                 .doc(widget.roomId)
                 .update({
               'hasTimerStopped': true,
             });
-            nextScreenReplacement(context, const EndPage());
+            Future.delayed(
+              const Duration(seconds: 1),
+              (() {
+                nextScreenReplacement(
+                    context,
+                    EndPage(
+                      isAdmin: widget.isAdmin,
+                      roomId: widget.roomId,
+                    ));
+              }),
+            );
           }
         },
         child: const Text(
@@ -362,6 +377,7 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
             setState(() {
               hasParticipantsStopButtonPressed = true;
             });
+            //setStateIfMounted(hasParticipantsStopButtonPressed)
           }
         },
         child: const Text(

@@ -167,11 +167,36 @@ class DataBaseService {
   }
 
   //send message
-  pressStopButtonAndSaveInFIrestore(String roomId, Map<String, dynamic> timeParticipant) async {
+  pressStopButtonAndSaveInFIrestore(
+      String roomId, Map<String, dynamic> timeParticipant) async {
     roomCollection.doc(roomId).collection('record').add(timeParticipant);
     // roomCollection.doc(roomId).update({
     //   'timer': timeParticipant['time'],
     //   'userNamePressed': timeParticipant['userName'],
     // });
+  }
+
+  getRecordsOfparticipant(String roomId) async {
+    QuerySnapshot querySnapshot =
+        await roomCollection.doc(roomId).collection('record').get();
+    final allDataTime =
+        querySnapshot.docs.map((doc) => doc.get('time')).toList();
+
+    return allDataTime;
+    // final allDataName =
+    //     querySnapshot.docs.map((doc) => doc.get('userName')).toList();
+
+    //print(allData.contains('time'));
+    // print(allData.map((e) => print(e)));
+    // print(allDataTime);
+    // print(allDataName);
+    // Map? records;
+    // for (int i = 0; i < allDataTime.length; i++) {
+    //   records = {allDataName[i]: allDataTime[i]};
+    // }
+
+    // print(records!['time']);
+    // //print(allData);
+    // // return roomCollection.doc(roomId).collection('record').get();
   }
 }
