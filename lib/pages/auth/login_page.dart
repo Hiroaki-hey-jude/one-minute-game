@@ -24,32 +24,40 @@ class _LoginPageState extends State<LoginPage> {
   String password = '';
   bool _isloading = false;
   AuthService authService = AuthService();
+  double deviceHeight = 0;
+  double deviceWidth = 0;
   @override
   Widget build(BuildContext context) {
+    deviceHeight = MediaQuery.of(context).size.height;
+    deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: _isloading
           ? Center(
               child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor))
           : GestureDetector(
-            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-            child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
-                  child: Form(
-                    key: formKey,
+              onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.fromLTRB(30, deviceHeight / 4.8, 30, 0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           '１分間ゲーム',
                           style: TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.bold),
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                         const SizedBox(height: 10),
-                        Image.asset("assets/transIcons.png"),
+                        Image.asset(
+                          "assets/transIcons.png",
+                          height: 200,
+                        ),
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
                               labelText: "Email",
@@ -62,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                               email = val;
                             });
                           },
-          
+
                           // check tha validation
                           validator: (val) {
                             return RegExp(
@@ -107,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: BorderRadius.circular(30))),
                             child: const Text(
                               'ログイン',
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             onPressed: () {
                               login();
@@ -118,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
                         Text.rich(
                           TextSpan(
                               text: "アカウントを持っていませんか? ",
-                              style: TextStyle(color: Colors.black, fontSize: 14),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
                               children: <TextSpan>[
                                 TextSpan(
                                     text: '登録',
@@ -127,7 +137,8 @@ class _LoginPageState extends State<LoginPage> {
                                         decoration: TextDecoration.underline),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        nextScreen(context, const RegisterPage());
+                                        nextScreen(
+                                            context, const RegisterPage());
                                       })
                               ]),
                         )
@@ -136,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-          ),
+            ),
     );
   }
 
@@ -154,8 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                 .gettingUserData(email);
         await HelperFunction.saveUserLoggedInStatus(true);
         await HelperFunction.saveUserEmailSF(email);
-        await HelperFunction.saveUserNameSF(
-            snapshot.docs[0]['name']); //naze
+        await HelperFunction.saveUserNameSF(snapshot.docs[0]['name']); //naze
         print(snapshot.docs[0]['name']);
         nextScreenReplacement(context, const HomePage());
       } else if (emailLogInResults == EmailLogInResults.EmailNotVerified) {

@@ -22,8 +22,12 @@ class _RegisterPageState extends State<RegisterPage> {
   String roomname = '';
   bool _isloading = false;
   AuthService authService = AuthService();
+  double deviceHeight = 0;
+  double deviceWidth = 0;
   @override
   Widget build(BuildContext context) {
+    deviceHeight = MediaQuery.of(context).size.height;
+    deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: _isloading
           ? Center(
@@ -34,22 +38,27 @@ class _RegisterPageState extends State<RegisterPage> {
           : GestureDetector(
               onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
               child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
-                  child: Form(
-                      key: formKey,
+                child: Form(
+                    key: formKey,
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding:
+                          EdgeInsets.fromLTRB(30, deviceHeight / 4.8, 30, 0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
+                          Text(
                             '1分間ゲーム',
                             style: TextStyle(
-                                fontSize: 40, fontWeight: FontWeight.bold),
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                           const SizedBox(height: 10),
-                          Image.asset("assets/transIcons.png"),
+                          Image.asset(
+                            "assets/transIcons.png",
+                            height: 200,
+                          ),
                           TextFormField(
                             decoration: textInputDecoration.copyWith(
                                 labelText: "Name",
@@ -158,8 +167,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                         ],
-                      )),
-                ),
+                      ),
+                    )),
               ),
             ),
     );
