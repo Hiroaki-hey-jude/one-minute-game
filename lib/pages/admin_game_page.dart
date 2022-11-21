@@ -211,6 +211,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         if (snapshot.data['members'].length != 0) {
                           return SingleChildScrollView(
                             child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
                               itemCount: snapshot.data['members'].length,

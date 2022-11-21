@@ -95,7 +95,20 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
                                   fontSize: 20,
                                 ),
                               )
-                            : const Text('他の参加者を待っています'),
+                            : Column(
+                                children: [
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height / 3,
+                                    width: double.infinity,
+                                    child: Image.asset("assets/wait.jpg"),
+                                  ),
+                                  const Text(
+                                    '他の参加者を待っています',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ],
+                              ),
                       )
                     ],
                   ),
@@ -119,6 +132,7 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
           return snapshot.hasData
               ? SingleChildScrollView(
                   child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
@@ -189,8 +203,14 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
           }
           return hasParticipantsStopButtonPressed != true
               ? countTimerForParticipants()
-              : const Center(
-                  child: Text('少々お待ちください'),
+              : const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  child: Center(
+                    child: Text(
+                      '少々お待ちください',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ),
                 );
         } else {
           return const Center(

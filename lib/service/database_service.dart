@@ -218,15 +218,16 @@ class DataBaseService {
     }
   }
 
+  deleteRoom(String roomId) {
+    roomCollection.doc(roomId).delete();
+  }
+
   updateDataOfRooms(String roomId) async {
-    await FirebaseFirestore.instance
-        .collection('rooms')
-        .doc(roomId)
-        .update({
+    await FirebaseFirestore.instance.collection('rooms').doc(roomId).update({
       'hasGameStarted': false,
       'hasTimerStarted': false,
       'hasTimerStopped': false,
-      'members': FieldValue.delete()
+      'members': []
     });
   }
 }

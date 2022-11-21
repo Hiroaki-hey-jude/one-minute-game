@@ -121,6 +121,7 @@ class _MakeGamePageState extends State<MakeGamePage> {
                   return snapshot.hasData
                       ? SingleChildScrollView(
                           child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: snapshot.data.docs.length,
                             itemBuilder: ((context, index) {
@@ -133,7 +134,9 @@ class _MakeGamePageState extends State<MakeGamePage> {
                             }),
                           ),
                         )
-                      : Container();
+                      : const Center(
+                        child: Text('ルームを作ってみんなを招待しよう!'),
+                      );
                 }),
           ),
         ],
@@ -146,6 +149,8 @@ class _MakeGamePageState extends State<MakeGamePage> {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: ListTile(
+        tileColor: Colors.yellow[100],
+        textColor: Colors.black54,
         onTap: () {
           nextScreen(
               context,
@@ -155,11 +160,9 @@ class _MakeGamePageState extends State<MakeGamePage> {
                   roomName: roomName,
                   roomKey: roomKey));
         },
-        shape: const RoundedRectangleBorder(
-            side: BorderSide(color: Colors.black12)),
         leading: CircleAvatar(
           radius: 30,
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.9),
           child: Text(
             roomName.substring(0, 1).toUpperCase(),
             style: const TextStyle(color: Colors.white),
@@ -167,6 +170,12 @@ class _MakeGamePageState extends State<MakeGamePage> {
         ),
         title:
             Text(roomName, style: const TextStyle(fontWeight: FontWeight.bold)),
+        trailing: IconButton(
+          onPressed: () {
+            DataBaseService().deleteRoom(roomId);
+          },
+          icon: const Icon(Icons.delete),
+        ),
       ),
     );
   }

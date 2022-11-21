@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:timer_chellenge/pages/home_page.dart';
 import 'package:timer_chellenge/pages/pin_page.dart';
 import 'package:timer_chellenge/service/database_service.dart';
 import 'package:timer_chellenge/widgets.dart/widgets.dart';
@@ -189,7 +190,7 @@ class _EndPageState extends State<EndPage> {
               DataBaseService().updateDataOfRooms(widget.roomId).then((val) {
                 setState(() {
                   _isLoading = false;
-                  nextScreenReplacement(context, const PinPage());
+                  nextScreenReplacement(context, const HomePage());
                 });
               });
             });
@@ -210,7 +211,7 @@ class _EndPageState extends State<EndPage> {
         style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).primaryColor),
         onPressed: () {
-          nextScreenReplacement(context, const PinPage());
+          nextScreenReplacement(context, const HomePage());
         },
         child: const Text(
           '終了',
