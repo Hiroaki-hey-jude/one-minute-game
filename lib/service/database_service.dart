@@ -53,7 +53,8 @@ class DataBaseService {
       'roomKey': rndnumber,
       'hasGameStarted': false,
       'hasTimerStarted': false,
-      'hasTimerStopped': false
+      'hasTimerStopped': false,
+      'recordsUnlocked': false
     });
     //update the members
     await roomDocumentReference.update({
@@ -229,5 +230,10 @@ class DataBaseService {
       'hasTimerStopped': false,
       'members': []
     });
+  }
+
+  checkRecordsUnlocked(String roomId) async{
+    DocumentSnapshot docSnapshot = await roomCollection.doc(roomId).get();
+    return docSnapshot.get('recordsUnlocked');
   }
 }
