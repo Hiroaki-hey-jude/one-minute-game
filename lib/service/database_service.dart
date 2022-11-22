@@ -228,6 +228,7 @@ class DataBaseService {
       'hasGameStarted': false,
       'hasTimerStarted': false,
       'hasTimerStopped': false,
+      'recordsUnlocked': false,
       'members': []
     });
   }
