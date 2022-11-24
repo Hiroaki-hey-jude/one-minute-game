@@ -1,3 +1,4 @@
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,20 +16,58 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Constant().primaryColor,
+        scaffoldBackgroundColor: Colors.white,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: MyAppHome(),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppHome extends StatefulWidget {
+  const MyAppHome({super.key});
+
+  @override
+  State<MyAppHome> createState() => _MyAppHomeState();
+}
+
+class _MyAppHomeState extends State<MyAppHome> {
+  String _authStatus = 'Unknown';
+  Future<void> initPlugin() async {
+    final TrackingStatus status =
+        await AppTrackingTransparency.trackingAuthorizationStatus;
+    setState(() => _authStatus = '$status');
+    // If the system can show an authorization request dialog
+    if (status == TrackingStatus.notDetermined) {
+      // Show a custom explainer dialog before the system dialog
+      await showCustomTrackingDialog(context);
+      // Wait for dialog popping animation
+      await Future.delayed(const Duration(milliseconds: 200));
+      // Request system's tracking authorization dialog
+      final TrackingStatus status =
+          await AppTrackingTransparency.requestTrackingAuthorization();
+      setState(() => _authStatus = '$status');
+    }
+
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    print("UUID: $uuid");
+  }
+
   bool _isSignedIn = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getUserLoggedInStatus();
+    initPlugin();
   }
 
   getUserLoggedInStatus() async {
@@ -43,13 +82,28 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Constant().primaryColor,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: _isSignedIn ? const HomePage() : const LoginPage(),
+    return Scaffold(
+      body: _isSignedIn ? const HomePage() : const LoginPage(),
     );
   }
+
+  Future<void> showCustomTrackingDialog(BuildContext context) async =>
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Dear User'),
+          content: const Text(
+            'このアプリでは取得したトラッキングデータを、 '
+            'お客様に合わせたご提案等のサービスの'
+            '改善や向上をを目的として分析、使用させて'
+            'いただきます。',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
+      );
 }

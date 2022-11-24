@@ -88,7 +88,15 @@ class _MakeGamePageState extends State<MakeGamePage> {
         onPressed: () {
           popUpDialog(context);
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'ルーム名',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+        ),
       ),
       body: _isLoading
           ? Center(
@@ -106,11 +114,7 @@ class _MakeGamePageState extends State<MakeGamePage> {
     return SafeArea(
       child: Column(
         children: [
-          const Text(
-            'ルーム名',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const Divider(height: 20),
+          const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -135,8 +139,8 @@ class _MakeGamePageState extends State<MakeGamePage> {
                           ),
                         )
                       : const Center(
-                        child: Text('ルームを作ってみんなを招待しよう!'),
-                      );
+                          child: Text('ルームを作ってみんなを招待しよう!'),
+                        );
                 }),
           ),
         ],

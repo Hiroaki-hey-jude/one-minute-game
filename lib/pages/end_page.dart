@@ -187,11 +187,9 @@ class _EndPageState extends State<EndPage> {
               _isLoading = true;
             });
             DataBaseService().deleteRecordData(widget.roomId).then((val) {
-              DataBaseService().updateDataOfRooms(widget.roomId).then((val) {
-                setState(() {
-                  _isLoading = false;
-                  nextScreenReplacement(context, const HomePage());
-                });
+              setState(() {
+                _isLoading = false;
+                nextScreenReplacement(context, const HomePage());
               });
             });
           },

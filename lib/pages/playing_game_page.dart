@@ -355,51 +355,55 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
       width: MediaQuery.of(context).size.width / 3,
       height: MediaQuery.of(context).size.height / 9,
       child: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
+          stream: FirebaseFirestore.instance
               .collection('rooms')
               .doc(widget.roomId)
               .snapshots(),
-        builder: (context, snapshot) {
-          return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.amber,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(70),
+          builder: (context, snapshot) {
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(70),
+                ),
               ),
-            ),
-            onPressed: () {
-              if (hasTimerStarted == true && snapshot.data!.get('recordsUnlocked') == true) {
-                FirebaseFirestore.instance
-                    .collection('rooms')
-                    .doc(widget.roomId)
-                    .update({
-                  'hasTimerStopped': true,
-                });
-                Future.delayed(
-                  const Duration(seconds: 1),
-                  (() {
-                    nextScreenReplacement(
-                        context,
-                        EndPage(
-                          isAdmin: widget.isAdmin,
-                          roomId: widget.roomId,
-                        ));
-                  }),
-                );
-              }else{
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              onPressed: () {
+                if (hasTimerStarted == true &&
+                    snapshot.data!.get('recordsUnlocked') == true) {
+                  FirebaseFirestore.instance
+                      .collection('rooms')
+                      .doc(widget.roomId)
+                      .update({
+                    'hasTimerStopped': true,
+                  });
+                  DataBaseService()
+                      .updateDataOfRooms(widget.roomId)
+                      .then((val) {
+                        Future.delayed(
+                      const Duration(seconds: 1),
+                      (() {
+                        nextScreenReplacement(
+                            context,
+                            EndPage(
+                              isAdmin: widget.isAdmin,
+                              roomId: widget.roomId,
+                            ));
+                      }),
+                    );
+                      });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('参加者が誰もSTOPしていません'),
                     backgroundColor: Colors.red,
                   ));
-              }
-            },
-            child: const Text(
-              'STOP',
-              style: TextStyle(fontSize: 28),
-            ),
-          );
-        }
-      ),
+                }
+              },
+              child: const Text(
+                'STOP',
+                style: TextStyle(fontSize: 28),
+              ),
+            );
+          }),
     );
   }
 
@@ -407,36 +411,35 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
     return SizedBox(
       height: 120,
       child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                backgroundColor:
-                    Theme.of(context).primaryColor.withOpacity(0.7),
-              ),
-              onPressed: () {
-                if (hasTimerStarted == true) {
-                  _stopWatchTimer.onStopTimer();
-                  Map<String, dynamic> timeParticipant = {
-                    'time': timePressed / 1000,
-                    'userName': widget.userName,
-                  };
-                  DataBaseService().pressStopButtonAndSaveInFIrestore(
-                      widget.roomId, timeParticipant);
-                  FirebaseFirestore.instance
-                      .collection('rooms')
-                      .doc(widget.roomId)
-                      .update({
-                    'recordsUnlocked': true,
-                  });
-                  setState(() {
-                    hasParticipantsStopButtonPressed = true;
-                  });
-                }
-              },
-              child: const Text(
-                'STOP',
-                style: TextStyle(fontSize: 30),
-              ),
-            ),
+        style: ElevatedButton.styleFrom(
+          shape: const CircleBorder(),
+          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.7),
+        ),
+        onPressed: () {
+          if (hasTimerStarted == true) {
+            _stopWatchTimer.onStopTimer();
+            Map<String, dynamic> timeParticipant = {
+              'time': timePressed / 1000,
+              'userName': widget.userName,
+            };
+            DataBaseService().pressStopButtonAndSaveInFIrestore(
+                widget.roomId, timeParticipant);
+            FirebaseFirestore.instance
+                .collection('rooms')
+                .doc(widget.roomId)
+                .update({
+              'recordsUnlocked': true,
+            });
+            setState(() {
+              hasParticipantsStopButtonPressed = true;
+            });
+          }
+        },
+        child: const Text(
+          'STOP',
+          style: TextStyle(fontSize: 30),
+        ),
+      ),
     );
   }
 }
