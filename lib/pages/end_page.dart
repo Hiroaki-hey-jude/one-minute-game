@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:timer_chellenge/pages/home_page.dart';
-import 'package:timer_chellenge/pages/pin_page.dart';
 import 'package:timer_chellenge/service/database_service.dart';
 import 'package:timer_chellenge/widgets.dart/widgets.dart';
 
@@ -157,7 +156,7 @@ class _EndPageState extends State<EndPage> {
                     ),
                   ),
                 )
-              : Center(
+              : const Center(
                   child: Text('何かがおかしい'),
                 );
         },
