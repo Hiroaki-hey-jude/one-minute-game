@@ -91,11 +91,11 @@ class _MakeGamePageState extends State<MakeGamePage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,
         title: const Text(
           'ルーム名',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ),
       body: _isLoading

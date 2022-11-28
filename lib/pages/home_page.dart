@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:timer_chellenge/helper/helper_function.dart';
 import 'package:timer_chellenge/pages/join_page.dart';
 import 'package:timer_chellenge/pages/make_game_page.dart';
+import 'package:timer_chellenge/pages/mypage.dart';
 import 'package:timer_chellenge/pages/pin_page.dart';
 import 'package:timer_chellenge/pages/profile_page.dart';
 import 'package:timer_chellenge/service/auth_service.dart';
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const PinPage(),
     const MakeGamePage(),
-    const ProfilePage(),
+    const MyPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -87,19 +88,16 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.pin),
             label: 'Pin',
-            tooltip: "This is a Book Page",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.rocket_launch),
             label: 'ゲーム',
-            tooltip: "This is a Business Page",
             backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             activeIcon: Icon(Icons.school_outlined),
-            label: 'アカウント',
-            tooltip: "This is a School Page",
+            label: '設定',
             backgroundColor: Colors.purple,
           ),
         ],

@@ -54,8 +54,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Colors.white,
+        elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -208,18 +208,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [const Text('Email'), Text(email)],
                       ),
-                      SizedBox(height: 40),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent),
-                          onPressed: () {
-                            popupForLogout(context);
-                          },
-                          child: Text('ログアウト'),
-                        ),
-                      )
+                      // SizedBox(height: 40),
+                      // SizedBox(
+                      //   width: MediaQuery.of(context).size.width,
+                      //   child: ElevatedButton(
+                      //     style: ElevatedButton.styleFrom(
+                      //         backgroundColor: Colors.transparent),
+                      //     onPressed: () {
+                      //       popupForLogout(context);
+                      //     },
+                      //     child: Text('ログアウト'),
+                      //   ),
+                      // )
                     ],
                   ),
                 );
@@ -227,45 +227,45 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  popupForLogout(context) {
-    showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: const Text(
-              'ログアウトする',
-              textAlign: TextAlign.left,
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () async {
-                  await authService.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                      (route) => false);
-                },
-                child: const Text('ログアウト'),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  print('hihi');
-                  Navigator.of(context).pop();
-                },
-                child: const Text('キャンセル'),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor),
-              ),
-            ],
-          );
-        });
-      },
-    );
-  }
+  // popupForLogout(context) {
+  //   showDialog(
+  //     barrierDismissible: true,
+  //     context: context,
+  //     builder: (context) {
+  //       return StatefulBuilder(builder: (context, setState) {
+  //         return AlertDialog(
+  //           title: const Text(
+  //             'ログアウトする',
+  //             textAlign: TextAlign.left,
+  //           ),
+  //           actions: [
+  //             ElevatedButton(
+  //               onPressed: () async {
+  //                 await authService.signOut();
+  //                 Navigator.of(context).pushAndRemoveUntil(
+  //                     MaterialPageRoute(
+  //                         builder: (context) => const LoginPage()),
+  //                     (route) => false);
+  //               },
+  //               child: const Text('ログアウト'),
+  //               style: ElevatedButton.styleFrom(
+  //                   backgroundColor: Theme.of(context).primaryColor),
+  //             ),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 print('hihi');
+  //                 Navigator.of(context).pop();
+  //               },
+  //               child: const Text('キャンセル'),
+  //               style: ElevatedButton.styleFrom(
+  //                   backgroundColor: Theme.of(context).primaryColor),
+  //             ),
+  //           ],
+  //         );
+  //       });
+  //     },
+  //   );
+  // }
 
   Future<void> pickImage() async {
     print('picked fileに入った');

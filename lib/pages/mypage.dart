@@ -4,6 +4,9 @@ import 'package:timer_chellenge/pages/profile_page.dart';
 import 'package:timer_chellenge/widgets.dart/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../service/auth_service.dart';
+import 'auth/login_page.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
 
@@ -12,6 +15,7 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  AuthService authService = AuthService();
   double deviceHeight = 0;
   double deviceWidth = 0;
   @override
@@ -21,8 +25,12 @@ class _MyPageState extends State<MyPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('設定'),
+        elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: SingleChildScrollView(
+      body: SizedBox(
+        width: deviceWidth,
+        height: deviceHeight,
         child: SettingsList(
           sections: [
             SettingsSection(
@@ -50,10 +58,6 @@ class _MyPageState extends State<MyPage> {
                     }
                   },
                 ),
-              ],
-            ),
-            SettingsSection(
-              tiles: [
                 SettingsTile.navigation(
                   title: const Text('プライバシーポリシー'),
                   leading: Icon(Icons.person, color: Colors.white),
@@ -74,8 +78,8 @@ class _MyPageState extends State<MyPage> {
                   title: const Text('お問い合わせ'),
                   leading: Icon(Icons.person, color: Colors.white),
                   onPressed: (context) async {
-                    final url = Uri.parse(
-                        'https://forms.gle/FwZNwXkjJhjCt2WE8');
+                    final url =
+                        Uri.parse('https://forms.gle/FwZNwXkjJhjCt2WE8');
                     if (!await launchUrl(url)) {
                     } else {
                       throw 'このURLにはアクセスできません';
@@ -84,9 +88,60 @@ class _MyPageState extends State<MyPage> {
                 ),
               ],
             ),
+            SettingsSection(
+              tiles: [
+                SettingsTile.navigation(
+                  title: const Text('ログアウト'),
+                  leading: Icon(Icons.person, color: Colors.white),
+                  onPressed: (context) async {
+                    popupForLogout(context);
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  popupForLogout(context) {
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: const Text(
+              'ログアウトする',
+              textAlign: TextAlign.left,
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  await authService.signOut();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                      (route) => false);
+                },
+                child: const Text('ログアウト'),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  print('hihi');
+                  Navigator.of(context).pop();
+                },
+                child: const Text('キャンセル'),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor),
+              ),
+            ],
+          );
+        });
+      },
     );
   }
 }
