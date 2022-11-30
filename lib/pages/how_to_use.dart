@@ -10,6 +10,11 @@ class HelpPage extends StatelessWidget {
     deviceWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('使い方'),
+        backgroundColor: Theme.of(context).primaryColor,
+        elevation: 0,
+      ),
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
@@ -19,12 +24,9 @@ class HelpPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Image.asset(
-                'assets/icon-white.png',
-                height: 150,
-              ),
+              const SizedBox(height: 20),
               const Text(
-                'ー　使い方　ー',
+                'ー アドミンとプレイヤーの2種類の遊び方があるよ！ ー',
                 style: TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.bold,
@@ -32,19 +34,22 @@ class HelpPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const Text(
-                '１ アドミン編',
+                'アドミン編',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Color(0xFFEF9F9F),
                     fontWeight: FontWeight.bold,
-                    fontSize: 17),
+                    fontSize: 21),
               ),
               const SizedBox(height: 20),
               const Text(
-                'ルームを作ろう！',
+                '1.ルームを作ろう！',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.black54, fontWeight: FontWeight.bold),
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
               ),
               const SizedBox(height: 30),
               Image.asset(
@@ -60,49 +65,132 @@ class HelpPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               const Text(
-                '２ ルームキーを友達に教えよう！',
+                '2.ルームキーを友達に教えよう！',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/screenshot2.png',
+                height: 450,
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                '＊プレイヤーが集まったら”プレイヤーを締め切る”ボタンを押してください',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black54, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                '3.プレイヤーが全員タイマーをストップしたらSTOPボタンを押して結果画面へGO',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/screenshot3.png',
+                height: 450,
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'プレイヤーがいつSTOPしたかをアドミンはリアルタイムで見れるよ！',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black54, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                '4.結果を見たら終了ボタンを押してゲームを閉じよう！',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/screenshot4.png',
+                height: 450,
+              ),
+              const SizedBox(height: 30),
+              const Text(
+                'プレイヤー編',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Color(0xFFEF9F9F),
                     fontWeight: FontWeight.bold,
-                    fontSize: 16),
+                    fontSize: 21),
               ),
               const SizedBox(height: 20),
               const Text(
-                '他の人が投稿したコレクションをみてみましょう。\n知らなかった知識が増えたり\n気の合う仲間を見つけることができるかも！',
+                '1.アドミンから教えてもらったPINを入力してルームに入ろう！',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.black54, fontWeight: FontWeight.bold),
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               Image.asset(
-                'assets/image/IMG_0586.PNG',
+                'assets/screenshot5.png',
                 height: 450,
               ),
               const SizedBox(height: 30),
               const Text(
-                '素敵なアイテムがあったらお気に入りにしたり\nコメントしてみましょう！',
+                '＊GOをタップしたらルームに入れるよ！',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black54, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 30),
+              const Text(
+                '2.アドミンがタイマーをスタートしたら自動で始まります。１分間ジャストだと思ったらSTOPボタンを押しましょう',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 20),
               Image.asset(
-                'assets/image/IMG_0597.PNG',
+                'assets/screenshot6.png',
                 height: 450,
               ),
               const SizedBox(height: 30),
               const Text(
-                'インストールいただきありがとうございます。\n今後、随時アップデートしていく予定ですので\nどうぞFavpicをお楽しみください。',
+                '＊アドミンがゲームを終了したら自動的に結果ページに遷移します！',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black54, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 30),
-              Image.asset(
-                'assets/image/launcher_icon_foreground.png',
-                height: 70,
+              const Text(
+                '3.結果発表！',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
               ),
+              const SizedBox(height: 20),
+              Image.asset(
+                'assets/screenshot4.png',
+                height: 450,
+              ),
+              const SizedBox(height: 30),
             ],
           ),
         ),

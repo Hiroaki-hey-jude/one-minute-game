@@ -91,6 +91,7 @@ class _MakeGamePageState extends State<MakeGamePage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0,
         title: const Text(

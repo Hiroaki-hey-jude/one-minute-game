@@ -105,7 +105,7 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
                                     child: Image.asset("assets/wait.jpg"),
                                   ),
                                   const Text(
-                                    '他の参加者を待っています',
+                                    '他のプレイヤーを待っています',
                                     style: TextStyle(fontSize: 20),
                                   ),
                                 ],
@@ -393,7 +393,7 @@ class _PlayingGamePageState extends State<PlayingGamePage> {
                       });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('参加者が誰もSTOPしていません'),
+                    content: Text('プレイヤーが誰もSTOPしていません'),
                     backgroundColor: Colors.red,
                   ));
                 }

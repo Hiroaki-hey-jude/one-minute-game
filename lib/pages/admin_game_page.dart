@@ -180,7 +180,13 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         setState(() {
                           _isloading = true;
                         });
-                        nextScreenReplacement(context, PlayingGamePage(isAdmin: isAdmin, roomId: widget.roomId, userName: widget.userName,));
+                        nextScreenReplacement(
+                            context,
+                            PlayingGamePage(
+                              isAdmin: isAdmin,
+                              roomId: widget.roomId,
+                              userName: widget.userName,
+                            ));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -191,7 +197,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                       ),
                       child: const FittedBox(
                         child: Text(
-                          '参加者を締め切る',
+                          'プレイヤーを締め切る',
                           style: TextStyle(fontSize: 20),
                         ),
                         fit: BoxFit.fitHeight,
@@ -200,7 +206,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                   ),
                   const SizedBox(height: 25),
                   const Text(
-                    '参加者',
+                    'プレイヤー',
                     style: TextStyle(fontSize: 20),
                   ),
                   const SizedBox(height: 10),
@@ -235,7 +241,8 @@ class _AdminGamePageState extends State<AdminGamePage> {
                 ],
               ),
             )
-          : Center( //adminじゃない
+          : Center(
+              //adminじゃない
               child: Column(
                 children: [
                   const SizedBox(height: 15),
@@ -247,7 +254,7 @@ class _AdminGamePageState extends State<AdminGamePage> {
                   ),
                   const SizedBox(height: 25),
                   const Text(
-                    '参加者',
+                    'プレイヤー',
                     style: TextStyle(fontSize: 20),
                   ),
                   const SizedBox(height: 15),
@@ -258,9 +265,11 @@ class _AdminGamePageState extends State<AdminGamePage> {
                         if (snapshot.data['hasGameStarted'] == true) {
                           Future.delayed(Duration(seconds: 1), (() {
                             nextScreenReplacement(
-                              context,
-                              PlayingGamePage(
-                                  isAdmin: isAdmin, roomId: widget.roomId, userName: widget.userName));
+                                context,
+                                PlayingGamePage(
+                                    isAdmin: isAdmin,
+                                    roomId: widget.roomId,
+                                    userName: widget.userName));
                           }));
                         }
                         if (snapshot.data['members'].length != 0) {
