@@ -1,17 +1,13 @@
-# timer_chellenge
+## １分間ゲーム
 
-A new Flutter project.
+:gift: [Play Store](https://apps.apple.com/jp/app/1%E5%88%86%E9%96%93%E3%82%B2%E3%83%BC%E3%83%A0/id6444773738)
 
-## Getting Started
+<img src="https://user-images.githubusercontent.com/76618285/205090112-671e724b-fbfc-4d2e-828b-d357876512c4.png">
 
-This project is a starting point for a Flutter application.
+### :wrench: 使用技術
+* 開発フレームワーク
+    * Flutter
 
-A few resources to get you started if this is your first Flutter project:
+### :seedling: 工夫点
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# one-minute-game
+- シンプルなUIデザイン
