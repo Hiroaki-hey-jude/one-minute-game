@@ -127,68 +127,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   RawMaterialButton(
                                     fillColor: Colors.transparent,
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text(
-                                                '選択',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              content: SingleChildScrollView(
-                                                child: ListBody(children: [
-                                                  InkWell(
-                                                    onTap: () {},
-                                                    child: Row(children: [
-                                                      Icon(
-                                                        Icons.camera,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      ),
-                                                      const SizedBox(width: 3),
-                                                      const Text(
-                                                        '写真を撮る',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      )
-                                                    ]),
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () async {
-                                                      Navigator.of(context).pop(
-                                                          true); // alert dialog 消すため
-                                                      await pickImage();
-                                                    },
-                                                    child: Row(children: [
-                                                      Icon(
-                                                        Icons.image,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      ),
-                                                      const SizedBox(width: 3),
-                                                      const Text(
-                                                        'ライブラリから選択',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      )
-                                                    ]),
-                                                  ),
-                                                ]),
-                                              ),
-                                            );
-                                          });
+                                    onPressed: () async { // alert dialog 消すため
+                                      await pickImage();
                                     },
-                                    child: Icon(Icons.camera_alt_rounded),
-                                    shape: CircleBorder(),
+                                    shape: const CircleBorder(),
+                                    child: const Icon(Icons.camera_alt_rounded),
                                   )
                                 ],
                               ),
@@ -196,30 +139,18 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 100,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [const Text('名前'), Text(userName)],
                       ),
-                      Divider(height: 20),
+                      const Divider(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [const Text('Email'), Text(email)],
                       ),
-                      // SizedBox(height: 40),
-                      // SizedBox(
-                      //   width: MediaQuery.of(context).size.width,
-                      //   child: ElevatedButton(
-                      //     style: ElevatedButton.styleFrom(
-                      //         backgroundColor: Colors.transparent),
-                      //     onPressed: () {
-                      //       popupForLogout(context);
-                      //     },
-                      //     child: Text('ログアウト'),
-                      //   ),
-                      // )
                     ],
                   ),
                 );

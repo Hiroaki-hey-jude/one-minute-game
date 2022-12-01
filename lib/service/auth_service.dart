@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:timer_chellenge/helper/helper_function.dart';
 import 'package:timer_chellenge/service/database_service.dart';
@@ -59,5 +60,16 @@ class AuthService {
     } catch (e) {
       return null;
     }
+  }
+
+  Future deleteUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    final msg =
+        await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+    // ユーザーを削除
+    await user?.delete();
+    await FirebaseAuth.instance.signOut();
+    print('ユーザーを削除しました!');
   }
 }

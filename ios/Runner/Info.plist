@@ -27,9 +27,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera Library Access Warning</string>
+	<string>カメラのアクセス許可</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo Library Access Warning</string>
+	<string>プロフィール写真に使用される写真をライブラリから選ぶことを許可しますか？</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>利用目的:お客様の興味関心に合わせた広告を表示するために利用いたします。</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

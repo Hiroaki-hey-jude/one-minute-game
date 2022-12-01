@@ -93,19 +93,19 @@ class _AdminGamePageState extends State<AdminGamePage> {
           backgroundColor: Theme.of(context).primaryColor,
           centerTitle: true,
           title: Text(widget.roomName),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  nextScreen(
-                      context,
-                      RoomInfoPage(
-                        roomId: widget.roomId,
-                        roomName: widget.roomName,
-                        admin: widget.userName,
-                      ));
-                },
-                icon: const Icon(Icons.info))
-          ],
+          // actions: [
+          //   IconButton(
+          //       onPressed: () {
+          //         nextScreen(
+          //             context,
+          //             RoomInfoPage(
+          //               roomId: widget.roomId,
+          //               roomName: widget.roomName,
+          //               admin: widget.userName,
+          //             ));
+          //       },
+          //       icon: const Icon(Icons.info))
+          // ],
         ),
         body: const Center(
           child: CircularProgressIndicator(
@@ -121,19 +121,19 @@ class _AdminGamePageState extends State<AdminGamePage> {
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: Text(widget.roomName),
-        actions: [
-          IconButton(
-              onPressed: () {
-                nextScreen(
-                    context,
-                    RoomInfoPage(
-                      roomId: widget.roomId,
-                      roomName: widget.roomName,
-                      admin: widget.userName,
-                    ));
-              },
-              icon: const Icon(Icons.info))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         nextScreen(
+        //             context,
+        //             RoomInfoPage(
+        //               roomId: widget.roomId,
+        //               roomName: widget.roomName,
+        //               admin: widget.userName,
+        //             ));
+        //       },
+        //       icon: const Icon(Icons.info))
+        // ],
       ),
       body: isAdmin == true
           ? Center(

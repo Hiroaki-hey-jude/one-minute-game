@@ -119,6 +119,16 @@ class _MyPageState extends State<MyPage> {
                     popupForLogout(context);
                   },
                 ),
+                SettingsTile.navigation(
+                  title: const Text('退会する'),
+                  leading: const Icon(
+                    Icons.logout_sharp,
+                    color: Colors.black,
+                  ),
+                  onPressed: (context) async {
+                    popupForDelteAccount(context);
+                  },
+                ),
               ],
             ),
           ],
@@ -148,6 +158,46 @@ class _MyPageState extends State<MyPage> {
                       (route) => false);
                 },
                 child: const Text('ログアウト'),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  print('hihi');
+                  Navigator.of(context).pop();
+                },
+                child: const Text('キャンセル'),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor),
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  popupForDelteAccount(context) {
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: const Text(
+              '退会するとデータがこれまでのデータが失われてしまいます',
+              textAlign: TextAlign.left,
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  await authService.deleteUser();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                      (route) => false);
+                },
+                child: const Text('退会する'),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor),
               ),

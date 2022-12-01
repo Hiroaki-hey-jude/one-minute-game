@@ -91,7 +91,7 @@ class _MyAppHomeState extends State<MyAppHome> {
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Dear User'),
+          title: const Text('ユーザー様へ'),
           content: const Text(
             'このアプリでは取得したトラッキングデータを、 '
             'お客様に合わせたご提案等のサービスの'
@@ -101,7 +101,7 @@ class _MyAppHomeState extends State<MyAppHome> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Continue'),
+              child: const Text('続ける'),
             ),
           ],
         ),
